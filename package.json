@@ -1,0 +1,34 @@
+{
+  "name": "class_mg",
+  "version": "1.0.0",
+  "description": "class management system",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+
+  "keywords": [
+    "class",
+    "student",
+    "instructor",
+    "online",
+    "classes"
+  ],
+  "author": "spm",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^14.2.0",
+    "express": "^4.17.2",
+    "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.14.0",
+    "sequelize-cli": "^6.4.1",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.3.0"
+  }
+}
