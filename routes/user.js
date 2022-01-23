@@ -2,14 +2,15 @@ const express = require("express")
 const router = express.Router()
 
 //require modules
-const { signup, signin, addRole } = require("../controllers/user")
+const { signup, signin, addRole, getUserDetailsById } = require("../controllers/user")
 const { signupVal, signinVal } = require("../validations/user")
 const expressValidator = require("../middlewares/expressValidator")
+const { verifyToken } = require("../middlewares/auth")
 
 
 router.post("/signup", signupVal, expressValidator, signup)
 router.post("/signin", signinVal, expressValidator, signin)
-router.get("/role", addRole)
+router.get("/:userId", verifyToken, getUserDetailsById)
 
 /**
 * @swagger
@@ -38,8 +39,6 @@ router.get("/role", addRole)
 *         description: User signedin
 *       422:
 *         description: Something went wrong
-* 
-*
 * /user/signup:    
 *   post:
 *     tags:
@@ -76,6 +75,25 @@ router.get("/role", addRole)
 *         description: User signedin
 *       422:
 *         description: Something went wrong
+* /user/{userId}:
+*   get:
+*     tags:
+*       - User
+*     name: Get User detail
+*     summary:  api for getting user detail by id
+*     parameters:
+*       - name: "userId"
+*         in: "path"
+*         description: "User Id"
+*     security:
+*       - bearerAuth: [] 
+*     consumes:
+*       - application/json
+*     responses:
+*       200:
+*         description: Data found 
+*       404:
+*         description: Data not found
 */
 
 module.exports = router

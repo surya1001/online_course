@@ -1,5 +1,5 @@
 const express = require("express")
-const { becomeInstructor, updateInstructor } = require("../controllers/instructor")
+const { becomeInstructor, updateInstructor, getInstructorDet, getAllInstructorDet } = require("../controllers/instructor")
 const { verifyToken } = require("../middlewares/auth")
 const expressValidator = require("../middlewares/expressValidator")
 const { instructorVal, updateInstructorVal } = require("../validations/instructor")
@@ -7,7 +7,8 @@ const router = express.Router()
 
 router.post("/", instructorVal, expressValidator, verifyToken, becomeInstructor)
 router.put("/", updateInstructorVal, expressValidator, verifyToken, updateInstructor)
-
+router.get("/", verifyToken, getAllInstructorDet)
+router.get("/:id", verifyToken, getInstructorDet)
 
 /**
 * @swagger
@@ -47,6 +48,9 @@ router.put("/", updateInstructorVal, expressValidator, verifyToken, updateInstru
 *     consumes:
 *       - application/json
 *     parameters:
+*       - name: "id"
+*         in: "path"
+*         description: "Instructor Id"
 *       - name: body
 *         in: body
 *         schema:
@@ -61,6 +65,39 @@ router.put("/", updateInstructorVal, expressValidator, verifyToken, updateInstru
 *         description: Instructor details updated. 
 *       422:    
 *         description: Something went wrong.
+*   get:
+*     tags:
+*       - Instructor
+*     name: Get instructor details
+*     summary:  api for getting all instructor details
+*     security:
+*       - bearerAuth: [] 
+*     consumes:
+*       - application/json
+*     responses:
+*       200:
+*         description: Data found 
+*       404:
+*         description: Data not found
+* /instructor/{id}:
+*   get:
+*     tags:
+*       - Instructor
+*     name: Get instructor details by id
+*     summary:  api for getting instructor details by id
+*     parameters:
+*       - name: "id"
+*         in: "path"
+*         description: "Instructor Id"
+*     security:
+*       - bearerAuth: [] 
+*     consumes:
+*       - application/json
+*     responses:
+*       200:
+*         description: Data found 
+*       404:
+*         description: Data not found
 */
 
 module.exports = router

@@ -2,9 +2,9 @@ const models = require("../models")
 
 const addRating = async (req, res) => {
   try {
-    const { courseId, rating, reviewMessage }= req.body
+    const { rating, reviewMessage }= req.body
+    const courseId = req.params.courseId
     const userId = req.userDetails.id
-    console.log(courseId, rating, userId)
 
     const course = await models.classes.findOne({where: {id: courseId}})
     if(!course) return res.status(400).json({message: "No such course exists"})
@@ -23,7 +23,8 @@ const addRating = async (req, res) => {
 
 const updateRating = async (req, res) => {
   try {
-    const { courseId, rating, reviewMessage }= req.body
+    const { rating, reviewMessage }= req.body
+    const courseId = req.params.courseId
     const ratingId = req.params.ratingId
     const userId = req.userDetails.id
 
@@ -65,4 +66,29 @@ const deleteRating = async (req, res) => {
   }
 }
 
-module.exports = { addRating, updateRating, deleteRating }
+const getAllRatingForCourse = async (req, res) => {
+  try {
+    const courseId = req.params.courseId
+    const userId = req.userDetails.id
+
+    const course = await models.classes.findOne({where: {id: courseId}})
+    if(!course) return res.status(400).json({message: "No such course exists"})
+
+    const ratingdet = await models.rating.findAll({
+      where: {courseId: courseId},
+      attributes: ['rating','reviewMessage','createdAt'],
+      include: [
+        {model: models.classes, attributes: ['title','description','fees','prerequisites']},
+        {model: models.user, attributes: ['name','email','mobile']}
+      ]
+    })
+    if(!ratingdet) return res.status(400).json({message: "Rating not found"})
+    return res.status(200).json({ ratingdet })
+
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({ message: "Something went wrong" })
+  }
+}
+
+module.exports = { addRating, updateRating, deleteRating, getAllRatingForCourse }

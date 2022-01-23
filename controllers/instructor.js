@@ -31,4 +31,43 @@ const updateInstructor = async (req, res) => {
   }
 }
 
-module.exports = { becomeInstructor, updateInstructor }
+const getInstructorDet = async (req, res) => {
+  try {
+    const userId = req.params.id
+
+    const instructorDet = await models.instructor.findOne({
+      where: { userId },
+      attributes: ['qualification','numberOfCourses','introductionBrief'],
+      include: {
+        model: models.user,
+        attributes: ['name', 'email', 'mobile']
+      }
+    })
+    if(!instructorDet) return res.status(400).json({message: "Become an instructor"})
+
+    return res.status(200).json({ message: "Instructor Details", instructorDet })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({ message: "Something went wrong" })
+  }
+}
+
+
+const getAllInstructorDet = async (req, res) => {
+  try {
+    const instructorDet = await models.instructor.findAll({
+      attributes: ['qualification','numberOfCourses','introductionBrief'],
+      include: {
+        model: models.user,
+        attributes: ['name', 'email', 'mobile']
+      }
+    })
+    if(!instructorDet) return res.status(400).json({message: "Become an instructor"})
+
+    return res.status(200).json({ message: "Instructor Details", instructorDet })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({ message: "Something went wrong" })
+  }
+}
+module.exports = { becomeInstructor, updateInstructor, getInstructorDet, getAllInstructorDet }

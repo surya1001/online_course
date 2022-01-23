@@ -72,6 +72,7 @@ const getEnrolledCourse = async (req, res) => {
         }
       ]
     })
+    if(!enrolledcourses) return res.status(200).json({message: "No course Enrolled Yet"})
     return res.status(200).json({ enrolledcourses})
   } catch (err) {
     console.log(err)

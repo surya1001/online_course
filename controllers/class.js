@@ -15,7 +15,7 @@ const createCourse = async (req, res) => {
     const classes = await models.classes.create({ title, description, instructorId: instructor.id, fees, prerequisites })
     const updateuser = await models.instructor.update({ numberOfCourses: numberOfCourses + 1 }, {where: {id: userId} })
 
-    return res.status(200).json({ message: "Instructor created", classes, updateuser })
+    return res.status(200).json({ message: "Course created", classes, updateuser })
   } catch (err) {
     console.log(err)
     return res.status(500).json({ message: "Something went wrong" })
@@ -36,7 +36,7 @@ const updateCourse = async (req, res) => {
     if(classinfo.userId != userId) return res.status(400).json({message: "You can only update course added by you"})
 
     const classes = await models.classes.update({ title, description, fees, prerequisites }, {where: {id}})
-    return res.status(200).json({ message: "Instructor created", classes })
+    return res.status(200).json({ message: "Course updated", classes })
   } catch (err) {
     console.log(err)
     return res.status(500).json({ message: "Something went wrong" })
@@ -61,7 +61,7 @@ const deleteCourse = async (req, res) => {
     numberOfCourses = instructor.numberOfCourses
     const updateuser = await models.instructor.update({ numberOfCourses: numberOfCourses - 1 }, {where: {id: userId} })
 
-    return res.status(200).json({ message: "Instructor created", classes, updateuser })
+    return res.status(200).json({ message: "Course deleted", classes, updateuser })
   } catch (err) {
     console.log(err)
     return res.status(500).json({ message: "Something went wrong" })

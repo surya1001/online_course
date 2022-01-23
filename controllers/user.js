@@ -17,28 +17,37 @@ const signup = async (req, res) => {
 
 //signin route
 const signin = async (req, res) => {
-  const { email, password } = req.body
-
-  const user = await models.user.findOne({ where: { email: email } })
-  if (!user) return res.status(400).json({ message: "No user found" })
-
-  const passwordMatched = await user.comparePassword(password)
-  if (passwordMatched) {
-    const role = await models.role.findOne({ where: { id: user.roleId } })
-    const token = jwt.sign({ id: user.id, name: user.name, roleId: user.roleId }, process.env.JWT_SECRET, { expiresIn: "24hr" })
-    return res.status(200).json({ message: "User loged in", token: token, name: user.name, email: user.email, isLoggedIn: true })
-  } else return res.status(400).json({ message: "Invalid credentials" })
-}
-
-const addRole = async (req, res) => {
   try{
-    const role1 = await models.role.create({roleName: "student", description: "student"})
-    const role2 = await models.role.create({roleName: "instructor", description: "instructor"})
-    return res.status(200).json({role: role1, role2: role2})
+    
+    const { email, password } = req.body
+    
+    const user = await models.user.findOne({ where: { email: email } })
+    if (!user) return res.status(400).json({ message: "No user found" })
+    
+    const passwordMatched = await user.comparePassword(password)
+    if (passwordMatched) {
+      const token = jwt.sign({ id: user.id, name: user.name, roleId: user.roleId }, process.env.JWT_SECRET, { expiresIn: "24hr" })
+      return res.status(200).json({ message: "User loged in", token: token, name: user.name, email: user.email, isLoggedIn: true })
+    } else return res.status(400).json({ message: "Invalid credentials" })
   }catch(err){
     console.log(err)
-    return res.status(500).json({message: "Something went wrong"})
+    return res.status(500).json({ message: "Something went wrong"})
   }
 }
 
-module.exports = { signup, signin, addRole }
+const getUserDetailsById = async (req, res) => {
+  try{
+    const userId = req.params.userId
+
+    const user = await models.user.findOne({
+      where: {id: userId},
+      attributes: ['name','email','mobile','number_of_course_enrolled','gender','city']
+    })
+    if(!user) return res.status(400).json({message: 'User not found'})
+    return res.status(200).json({user})
+  }catch(err){
+    console.log(err)
+    return res.status(500).json({ message: "Something went wrong"})
+  }
+}
+module.exports = { signup, signin, getUserDetailsById }

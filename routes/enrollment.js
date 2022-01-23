@@ -12,7 +12,7 @@ router.get("/", verifyToken, getEnrolledCourse)
 
 /**
 * @swagger
-* /instructor:    
+* /enroll:    
 *   post:
 *     tags:
 *       - Enroll Course
@@ -36,6 +36,21 @@ router.get("/", verifyToken, getEnrolledCourse)
 *         description: Course enrolled
 *       422:
 *         description: Something went wrong
+*   get:
+*     tags:
+*       - Enroll Course
+*     name: Get All Enrolled Course APIs
+*     summary:  api for getting all courses enrolled
+*     security:
+*       - bearerAuth: [] 
+*     consumes:
+*       - application/json
+*     responses:
+*       200:
+*         description: Data found 
+*       404:
+*         description: Data not found
+* /enroll/{courseId}:
 *   delete:
 *     tags:
 *       - Enroll Course
