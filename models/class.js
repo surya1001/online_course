@@ -33,13 +33,13 @@ module.exports = (sequelize, Sequelize) => {
   }, {
     freezeTableName: true,
     tableName: "classes"
-  })
+  }) 
 
   //association
   Classes.associate = function (models) {
-    Classes.belongsTo(models.user, {foreignKey: "userId", as: "instructor"})
-    Classes.hasMany(models.rating, {foreignKey: "classesId"})
+    Classes.hasMany(models.rating, {foreignKey: "courseId"})
     Classes.belongsTo(models.instructor, {foreignKey: "instructorId"})
+    Classes.hasMany(models.enrollment, {foreignKey: 'courseId'})
   }
 
   return Classes

@@ -3,6 +3,7 @@ const models = require("../models")
 const becomeInstructor = async (req, res) => {
   try {
     const userId = req.userDetails.id
+    console.log(userId)
     const { qualification, introductionBrief } = req.body
 
     const user = await models.user.findOne({where: {id: userId}})

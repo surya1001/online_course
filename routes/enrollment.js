@@ -1,12 +1,13 @@
 const express = require("express")
+const { enrolloncourse, withdrawfromcourse } = require("../controllers/enrollment")
 const { becomeInstructor, updateInstructor } = require("../controllers/instructor")
 const { verifyToken } = require("../middlewares/auth")
 const expressValidator = require("../middlewares/expressValidator")
 const { instructorVal, updateInstructorVal } = require("../validations/instructor")
 const router = express.Router()
 
-router.post("/", instructorVal, expressValidator, verifyToken, becomeInstructor)
-router.put("/", updateInstructorVal, expressValidator, verifyToken, updateInstructor)
+router.post("/", verifyToken, enrolloncourse)
+router.delete("/:courseId", verifyToken, withdrawfromcourse)
 
 
 /**
@@ -14,8 +15,8 @@ router.put("/", updateInstructorVal, expressValidator, verifyToken, updateInstru
 * /instructor:    
 *   post:
 *     tags:
-*       - Instructor
-*     summary: To become instructor
+*       - Enroll Course
+*     summary: To enroll on course
 *     security:
 *       - bearerAuth: []  
 *     consumes:
@@ -26,39 +27,32 @@ router.put("/", updateInstructorVal, expressValidator, verifyToken, updateInstru
 *         schema:
 *           type: object
 *           properties:
-*             qualification:
-*               type: string
-*             introductionBrief:
-*               type: string
+*             courseId:
+*               type: integer
 *         required:
-*           - qualification
-*           - introductionBrief
+*           - courseId
 *     responses:
 *       201:
-*         description: Instructor added
+*         description: Course enrolled
 *       422:
 *         description: Something went wrong
-*   put:
+*   delete:
 *     tags:
-*       - Instructor
-*     summary: To update a instructor details
+*       - Enroll Course
+*     summary: To withdraw from course
 *     security:
 *       - bearerAuth: []  
 *     consumes:
 *       - application/json
 *     parameters:
-*       - name: body
-*         in: body
-*         schema:
-*           type: object
-*           properties:
-*             qualification:
-*               type: string
-*             introductionBrief:
-*               type: string
+*       - name: "courseId"
+*         in: "path"
+*         description: "Withdraw from course"
+*         required: true
+*         type: integer
 *     responses:
 *       200:
-*         description: Instructor details updated. 
+*         description: Course withdrawn. 
 *       422:    
 *         description: Something went wrong.
 */

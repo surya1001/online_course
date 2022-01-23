@@ -1,9 +1,14 @@
 module.exports = (sequelize, Sequelize) => {
   const Rating = sequelize.define("rating",{
-    classesId: {
+    courseId: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      field: "enrollment_id"
+      field: "course_id"
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      field: "user_id"
     },
     rating: {
       type: Sequelize.INTEGER,
@@ -20,10 +25,13 @@ module.exports = (sequelize, Sequelize) => {
     tableName: "rating"
   })
 
+
   //association
   Rating.associate = function (models) {
-    Rating.belongsTo(models.user, {foreignKey: "classesId"})
+    Rating.belongsTo(models.classes, {foreignKey: "courseId"})
+    Rating.belongsTo(models.user, {foreignKey: "userId"})
   }
+  
 
   return Rating
 }

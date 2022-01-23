@@ -60,6 +60,8 @@ module.exports = (sequelize, Sequelize) => {
   User.associate = function (models) {
     User.hasOne(models.instructor, {foreignKey: "userId"})
     User.belongsTo(models.role, { foreignKey: 'roleId' });
+    User.hasMany(models.enrollment, { foreignKey: 'studentId' });  
+    User.hasMany(models.rating, { foreignKey: 'userId' });  
   }
 
   //hook to run before create
