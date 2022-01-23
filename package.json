@@ -1,14 +1,13 @@
 {
   "name": "class_mg",
   "version": "1.0.0",
-  "description": "class management system",
+  "description": "course management system",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js"
   },
-
   "keywords": [
-    "class",
+    "course",
     "student",
     "instructor",
     "online",

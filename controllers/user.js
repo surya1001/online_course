@@ -26,7 +26,7 @@ const signin = async (req, res) => {
   if (passwordMatched) {
     const role = await models.role.findOne({ where: { id: user.roleId } })
     const token = jwt.sign({ id: user.id, name: user.name, roleId: user.roleId }, process.env.JWT_SECRET, { expiresIn: "24hr" })
-    return res.status(200).json({ message: "User loged in", token: token, role: role.roleName, name: user.name, email: user.email, isLoggedIn: true })
+    return res.status(200).json({ message: "User loged in", token: token, name: user.name, email: user.email, isLoggedIn: true })
   } else return res.status(400).json({ message: "Invalid credentials" })
 }
 

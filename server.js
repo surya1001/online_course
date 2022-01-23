@@ -3,11 +3,17 @@ const express = require("express")
 const cors = require("cors")
 const db = require("./models/index")
 const dotenv = require("dotenv")
+const swaggerUi = require("swagger-ui-express")
+const swagger = require("./utils/swagger")
+
 
 const app = express()
+dotenv.config()
 app.use(cors())
 app.use(express.json())
-dotenv.config()
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger.swaggerSpec)); //Swagger setup
+
+
 
 db.sequelize.sync({})
 .then(() => console.log("DATABASE CONNECTED"))
