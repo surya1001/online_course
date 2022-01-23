@@ -5,6 +5,7 @@ const db = require("./models/index")
 const dotenv = require("dotenv")
 const swaggerUi = require("swagger-ui-express")
 const swagger = require("./utils/swagger")
+const path = require("path")
 
 
 const app = express()
@@ -12,7 +13,7 @@ dotenv.config()
 app.use(cors())
 app.use(express.json())
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger.swaggerSpec)); //Swagger setup
-
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 db.sequelize.sync({})

@@ -45,6 +45,10 @@ module.exports = (sequelize, Sequelize) => {
       field: "role_id",
       defaultValue: 1
     },
+    profilePic: {
+      type: Sequelize.STRING,
+      field: "profile_pic"
+    },
     isActive: {
       type: Sequelize.BOOLEAN,
       field: "is_active",

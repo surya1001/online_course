@@ -2,12 +2,13 @@ const express = require("express")
 const router = express.Router()
 
 //require modules
-const { signup, signin, addRole, getUserDetailsById } = require("../controllers/user")
-const { signupVal, signinVal } = require("../validations/user")
+const { signup, signin, getUserDetailsById } = require("../controllers/user")
+const { signupVal, signinVal, picVal } = require("../validations/user")
 const expressValidator = require("../middlewares/expressValidator")
 const { verifyToken } = require("../middlewares/auth")
+const { postImage } = require("../middlewares/uploadImage")
 
-
+router.post("/image", postImage)
 router.post("/signup", signupVal, expressValidator, signup)
 router.post("/signin", signinVal, expressValidator, signin)
 router.get("/:userId", verifyToken, getUserDetailsById)

@@ -3,6 +3,13 @@ const models = require('../models');
 const sequelize = models.Sequelize;
 const Op = sequelize.Op;
 
+exports.picVal = [
+  body('file')
+    .exists().withMessage('File is required')
+    .notEmpty().withMessage('File cannot be empty'),
+]
+
+
 exports.signupVal = [
   body('name')
     .exists().withMessage('Name is required')
