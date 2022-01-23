@@ -65,6 +65,8 @@ router.get("/:userId", verifyToken, getUserDetailsById)
 *               type: string
 *             city:
 *               type: string
+*             file:
+*               type: string
 *         required:
 *           - name
 *           - email
@@ -95,6 +97,28 @@ router.get("/:userId", verifyToken, getUserDetailsById)
 *         description: Data found 
 *       404:
 *         description: Data not found
+* /user/image:
+*   post:
+*     tags:
+*       - User
+*     summary: To upload profile picture
+*     consumes:
+*       - multipart/form-data
+*     parameters:
+*       - in: formData
+*         name: file
+*         type: file
+*         description: The file to upload.
+*       - in: query
+*         name: reason
+*         schema:
+*           type: string
+*         description: query is profile_pic for profile picture
+*     responses:
+*       201:
+*         description: Picture Uploaded
+*       422:
+*         description: Something went wrong
 */
 
 module.exports = router
