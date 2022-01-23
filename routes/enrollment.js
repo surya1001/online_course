@@ -1,5 +1,5 @@
 const express = require("express")
-const { enrolloncourse, withdrawfromcourse } = require("../controllers/enrollment")
+const { enrolloncourse, withdrawfromcourse, getEnrolledCourse } = require("../controllers/enrollment")
 const { becomeInstructor, updateInstructor } = require("../controllers/instructor")
 const { verifyToken } = require("../middlewares/auth")
 const expressValidator = require("../middlewares/expressValidator")
@@ -8,7 +8,7 @@ const router = express.Router()
 
 router.post("/", verifyToken, enrolloncourse)
 router.delete("/:courseId", verifyToken, withdrawfromcourse)
-
+router.get("/", verifyToken, getEnrolledCourse)
 
 /**
 * @swagger

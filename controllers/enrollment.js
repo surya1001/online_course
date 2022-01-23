@@ -50,5 +50,33 @@ const withdrawfromcourse = async (req, res) => {
   }
 }
 
+const getEnrolledCourse = async (req, res) => {
+  try{
+    const userId = req.userDetails.id
 
-module.exports = { enrolloncourse, withdrawfromcourse }
+    const enrolledcourses = await models.enrollment.findAll({
+      where: {studentId: userId},
+      attributes: ['enrollmentDate'],
+      include: [
+        {
+          model: models.user, 
+          attributes: ['name','email','mobile']
+        },
+        {
+          model: models.classes, 
+          attributes: ['title','description','fees','prerequisites'],
+          include: {
+            model: models.instructor,
+            attributes: ['qualification','introductionBrief']
+          }
+        }
+      ]
+    })
+    return res.status(200).json({ enrolledcourses})
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({ message: "Something went wrong" })
+  }
+}
+
+module.exports = { enrolloncourse, withdrawfromcourse, getEnrolledCourse }
