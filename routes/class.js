@@ -36,11 +36,14 @@ router.get("/", getAllCourseDetails)
 *               type: integer
 *             prerequisites:
 *               type: string
+*             file:
+*               type: string
 *         required:
 *           - title
 *           - description
 *           - fees
 *           - prerequisites
+*           - file
 *     responses:
 *       201:
 *         description: Course added
@@ -86,11 +89,14 @@ router.get("/", getAllCourseDetails)
 *               type: integer
 *             prerequisites:
 *               type: string
+*             file:
+*               type: string
 *           required:
 *             - title
 *             - description
 *             - fees
 *             - prerequisites
+*             - file
 *     responses:
 *       200:
 *         description: Course details updated. 

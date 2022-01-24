@@ -47,7 +47,8 @@ module.exports = (sequelize, Sequelize) => {
     },
     profilePic: {
       type: Sequelize.STRING,
-      field: "profile_pic"
+      field: "profile_pic",
+      defaultValue: "http://localhost:7000/uploads/profile/file-1642995324691.png"
     },
     isActive: {
       type: Sequelize.BOOLEAN,

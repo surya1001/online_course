@@ -4,7 +4,7 @@ const createCourse = async (req, res) => {
   try {
     const userId = req.userDetails.id
     const roleId = req.userDetails.roleId
-    const { title, description, fees, prerequisites } = req.body
+    const { title, description, fees, prerequisites, file } = req.body
 
     const role = await models.role.findOne({where: {id: roleId}})
     if(role.roleName !== "instructor") return res.status({message: "Only instructor can add course"})
@@ -12,8 +12,11 @@ const createCourse = async (req, res) => {
     const instructor = await models.instructor.findOne({ where: { userId }})
     numberOfCourses = instructor.numberOfCourses
 
-    const classes = await models.classes.create({ title, description, instructorId: instructor.id, fees, prerequisites })
-    const updateuser = await models.instructor.update({ numberOfCourses: numberOfCourses + 1 }, {where: {id: userId} })
+    const dest = file.replace("public/", "")
+    const classes = await models.classes.create({ title, description, instructorId: instructor.id, fees, prerequisites, coursePic: process.env.BASE_URL + dest })
+    
+    //increase no of course count by instructor
+    const updateuser = await models.instructor.update({ numberOfCourses: ++numberOfCourses }, {where: {userId} })
 
     return res.status(200).json({ message: "Course created", classes, updateuser })
   } catch (err) {
@@ -27,15 +30,19 @@ const updateCourse = async (req, res) => {
     const id = req.params.id
     const userId = req.userDetails.id
     const roleId = req.userDetails.roleId
-    const { title, description, fees, prerequisites } = req.body
+    const { title, description, fees, prerequisites, file } = req.body
 
     const role = await models.role.findOne({where: {id: roleId}})
     if(role.roleName !== "instructor") return res.status({message: "Only instructor can update course"})
 
-    const classinfo = await models.classes.findOne({where:{ id }})
-    if(classinfo.userId != userId) return res.status(400).json({message: "You can only update course added by you"})
+    const instructordet = await models.instructor.findOne({ where: {userId}})
 
-    const classes = await models.classes.update({ title, description, fees, prerequisites }, {where: {id}})
+    const classinfo = await models.classes.findOne({where:{ id }})
+    if(classinfo.instructorId != instructordet.id) return res.status(400).json({message: "You can only update course added by you"})
+
+    const dest = file.replace("public/", "")
+    const classes = await models.classes.update({ title, description, fees, prerequisites, coursePic: process.env.BASE_URL + dest }, {where: {id}})
+    
     return res.status(200).json({ message: "Course updated", classes })
   } catch (err) {
     console.log(err)
@@ -51,16 +58,15 @@ const deleteCourse = async (req, res) => {
 
     const role = await models.role.findOne({where: {id: roleId}})
     if(role.roleName !== "instructor") return res.status({message: "Only instructor can delete course"})
-
+    
+    const instructor = await models.instructor.findOne({ where: { userId }})
     const classinfo = await models.classes.findOne({where:{ id }})
-    if(classinfo.userId != userId) return res.status(400).json({message: "You can only delete course added by you"})
+    if(classinfo.instructorId != instructor.id) return res.status(400).json({message: "You can only delete course added by you"})
 
     const classes = await models.classes.destroy({ where: {id} })
 
-    const instructor = await models.instructor.findOne({ where: { userId }})
-    numberOfCourses = instructor.numberOfCourses
-    const updateuser = await models.instructor.update({ numberOfCourses: numberOfCourses - 1 }, {where: {id: userId} })
-
+    //decrease number of course count by instructor
+    const updateuser = await models.instructor.update({ numberOfCourses: --instructor.numberOfCourses }, {where: { userId } })
     return res.status(200).json({ message: "Course deleted", classes, updateuser })
   } catch (err) {
     console.log(err)

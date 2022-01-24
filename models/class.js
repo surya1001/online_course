@@ -25,6 +25,11 @@ module.exports = (sequelize, Sequelize) => {
       field: 'prerequisites',
       allowNull: false
     },
+    coursePic: {
+      type: Sequelize.STRING,
+      field: "course_pic",
+      allowNull: false,
+    },
     isActive: {
       type: Sequelize.BOOLEAN,
       field: "is_active",

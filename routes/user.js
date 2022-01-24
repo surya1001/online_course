@@ -6,9 +6,7 @@ const { signup, signin, getUserDetailsById } = require("../controllers/user")
 const { signupVal, signinVal, picVal } = require("../validations/user")
 const expressValidator = require("../middlewares/expressValidator")
 const { verifyToken } = require("../middlewares/auth")
-const { postImage } = require("../middlewares/uploadImage")
 
-router.post("/image", postImage)
 router.post("/signup", signupVal, expressValidator, signup)
 router.post("/signin", signinVal, expressValidator, signin)
 router.get("/:userId", verifyToken, getUserDetailsById)
@@ -97,28 +95,6 @@ router.get("/:userId", verifyToken, getUserDetailsById)
 *         description: Data found 
 *       404:
 *         description: Data not found
-* /user/image:
-*   post:
-*     tags:
-*       - User
-*     summary: To upload profile picture
-*     consumes:
-*       - multipart/form-data
-*     parameters:
-*       - in: formData
-*         name: file
-*         type: file
-*         description: The file to upload.
-*       - in: query
-*         name: reason
-*         schema:
-*           type: string
-*         description: query is profile_pic for profile picture
-*     responses:
-*       201:
-*         description: Picture Uploaded
-*       422:
-*         description: Something went wrong
 */
 
 module.exports = router

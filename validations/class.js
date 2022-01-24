@@ -16,4 +16,8 @@ exports.addClassesVal = [
   body('prerequisites')
     .exists().withMessage('Prerequisites is required')
     .notEmpty().withMessage('Prerequisites cannot be empty'),
+
+  body('file')
+    .exists().withMessage('File is required')
+    .notEmpty().withMessage('File cannot be empty'),
 ]

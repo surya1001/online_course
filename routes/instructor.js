@@ -48,9 +48,6 @@ router.get("/:id", verifyToken, getInstructorDet)
 *     consumes:
 *       - application/json
 *     parameters:
-*       - name: "id"
-*         in: "path"
-*         description: "Instructor Id"
 *       - name: body
 *         in: body
 *         schema:

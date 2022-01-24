@@ -1,9 +1,11 @@
 const express = require("express")
 const { addRating, deleteRating, updateRating, getAllRatingForCourse } = require("../controllers/rating")
 const { verifyToken } = require("../middlewares/auth")
+const expressValidator = require("../middlewares/expressValidator")
+const { addRatingVal } = require("../validations/rating")
 const router = express.Router()
 
-router.post("/:courseId", verifyToken, addRating)
+router.post("/:courseId",addRatingVal, expressValidator, verifyToken, addRating)
 router.get("/:courseId", verifyToken, getAllRatingForCourse)
 router.put("/:courseId/:ratingId", verifyToken, updateRating)
 router.delete("/:id", verifyToken, deleteRating)
@@ -29,7 +31,7 @@ router.delete("/:id", verifyToken, deleteRating)
 *           type: object
 *           properties:
 *             rating:
-*               type: string
+*               type: integer
 *             reviewMessage:
 *               type: string
 *         required:

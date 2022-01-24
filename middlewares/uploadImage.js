@@ -4,8 +4,11 @@ const path = require("path")
 const postImage = async (req, res) => { 
   var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      if(req.query.reason == "profile_pic"){
-        cb(null, "public/uploads/profile_pic")
+      if(req.query.reason == "profile"){
+        cb(null, "public/uploads/profile")
+      }
+      if(req.query.reason == "course"){
+        cb(null, "public/uploads/course")
       }
     },
     filename: (req, file, cb) => {

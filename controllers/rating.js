@@ -1,4 +1,7 @@
 const models = require("../models")
+const Sequelize = models.Sequelize
+const Op = Sequelize.Op
+
 
 const addRating = async (req, res) => {
   try {
@@ -6,12 +9,25 @@ const addRating = async (req, res) => {
     const courseId = req.params.courseId
     const userId = req.userDetails.id
 
+    //check whether rating is more than 5
+    if(rating > 5) return res.status(400).json({message: "Rating cannot be more than 5"})
+
+    //check whether course exists
     const course = await models.classes.findOne({where: {id: courseId}})
     if(!course) return res.status(400).json({message: "No such course exists"})
 
-    const enrollldet = await models.enrollment.findOne({where: {studentId: userId}})
+    //check whether user already enrolled in course
+    const enrollldet = await models.enrollment.findOne({
+      where:{[Op.and]: [ {courseId}, {studentId: userId} ]},
+    })
+    if(!enrollldet) return res.status(400).json({message: "Not enrolled to any course yet"})
     if(courseId != enrollldet.courseId) return res.status(400).json({message: "User can review only that course which he has enrolled"})
 
+    //check whether already rated by user for course
+    const ratingdet = await models.rating.findOne({
+      where:{[Op.and]: [ {courseId}, {userId} ]},
+    })
+    if(ratingdet) return res.status(400).json({message: "Already rated for course"})
     const createrating = await models.rating.create({ courseId, userId, rating, reviewMessage})
     return res.status(200).json({ message: "Course Rated", createrating })
 
@@ -35,6 +51,7 @@ const updateRating = async (req, res) => {
     if(!ratingdet) return res.status(400).json({message: "Rating not found"})
 
     const enrollldet = await models.rating.findOne({where: {userId: userId, courseId: courseId}})
+    if(!enrollldet) return res.status(400).json({message: "Not enrolled to any course yet"})
     if(courseId != enrollldet.courseId) return res.status(400).json({message: "User can review only that course which he has enrolled"})
 
     const createrating = await models.rating.update({ rating, reviewMessage}, {where: {id: ratingId}})
@@ -55,6 +72,7 @@ const deleteRating = async (req, res) => {
     if(!rating) return res.status(400).json({message: "No review found"})
 
     const enrollldet = await models.rating.findOne({where: {userId: userId, courseId: courseId}})
+    if(!enrollldet) return res.status(400).json({message: "Not enrolled to any course yet"})
     if(courseId != enrollldet.courseId) return res.status(400).json({message: "User can review only that course which he has enrolled"})
 
     const deleterating = await models.rating.destroy({ where: {id: id}})

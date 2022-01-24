@@ -1,4 +1,6 @@
 const models = require("../models")
+const Sequelize = models.Sequelize
+const Op = Sequelize.Op
 
 const enrolloncourse = async (req, res) => {
   try {
@@ -10,7 +12,9 @@ const enrolloncourse = async (req, res) => {
 
     const user = await models.user.findOne({where: {id: userId}})
 
-    const enrollldet = await models.enrollment.findOne({where: {studentId: userId}})
+    const enrollldet = await models.enrollment.findOne({
+      where:{[Op.and]: [ {courseId}, {studentId: userId} ]},
+    })
     if(enrollldet){
       if(courseId == enrollldet.courseId) return res.status(400).json({message: "User already enrolled in course"})
     }

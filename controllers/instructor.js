@@ -43,6 +43,7 @@ const getInstructorDet = async (req, res) => {
         attributes: ['name', 'email', 'mobile']
       }
     })
+    console.log(instructorDet)
     if(!instructorDet) return res.status(400).json({message: "Become an instructor"})
 
     return res.status(200).json({ message: "Instructor Details", instructorDet })
